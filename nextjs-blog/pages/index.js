@@ -2,7 +2,7 @@ import Head from 'next/head'
 
 import React from 'react';
 import axios from "axios";
-import SearchIcon from "@mui/icons-material/Search";
+
 import { Card, CardContent, Typography, Button, TextField } from '@mui/material';
 import { useState } from 'react';
 
@@ -32,7 +32,7 @@ function App() {
       />
       <Button onClick={ search }>
         Search
-        <SearchIcon />
+
       </Button>
 
       {/* search results */}
