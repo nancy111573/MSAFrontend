@@ -1,27 +1,46 @@
 import Head from 'next/head'
-
+import Favourites from './Favourites';
 import React from 'react';
 import axios from "axios";
 
-import { Card, CardContent, Typography, Button, TextField } from '@mui/material';
+import { Card, CardContent, CardActionArea, CardActions, Typography, Button, TextField } from '@mui/material';
 import { useState } from 'react';
 
-function App() {
+export default function App() {
   const [emojiName, setEmojiName] = useState("");
   const [emojiInfo, setEmojiInfo] = useState(undefined);
   const THE_URL = "https://emoji-api.com/emojis";
   const KEY = "access_key=60b62bd7e987589ab31bcb2fd6aec6f5efb45204";
+  const [favourites, setFavourites] = useState([]);
 
   return (
     <div style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     }}>
+      {/* emojis list */}
+      <h1>
+        My Favourite Emojis
+      </h1>
+      {favourites === undefined || favourites === null ? (
+        <div>
+          {favourites === undefined ? (
+            <p>Try type in a key word</p>
+          ) : (
+            <p>Emoji not found</p>
+          )}
+        </div>
+      ) : (
+        <div style={{alignItesm: 'center'}}>
+          <Favourites favourites={favourites}/>
+        </div>
+      )}
+
       {/* search bar */}
       <h1>
-        Emoji Search
+        Add New Emojis
       </h1> 
       <TextField
         style={{ minWidth: "60%" }}
@@ -32,7 +51,6 @@ function App() {
       />
       <Button onClick={ search }>
         Search
-
       </Button>
 
       {/* search results */}
@@ -57,22 +75,31 @@ function App() {
                 backgroundColor: 'mintcream' 
               }}
             > 
-              <CardContent sx={{ flex: '1 0 auto' }}>
-                <Typography variant="h5">
-                  {emoji.unicodeName.toString()}
-                </Typography>
-                <br />
-                <Typography variant="subtitle1" color="text.secondary">
-                  Category: {emoji.group.toString()} 
+              <CardActionArea style={{pointerEvents: 'none'}}>
+                <CardContent sx={{ flex: '1 0 auto' }}>
+                  <Typography variant="h5">
+                    {capitalizeFirst(emoji.unicodeName.toString())}
+                  </Typography>
                   <br />
-                  Sub-category: {emoji.subGroup.toString()}
-                </Typography>
-              </CardContent>
-              <CardContent>
-                <Typography variant="h1">
-                    {emoji.character.toString()}
-                </Typography>
-              </CardContent>
+                  <Typography variant="subtitle1" color="text.secondary">
+                    Category: {emoji.group.toString()} 
+                    <br />
+                    Sub-category: {emoji.subGroup.toString()}
+                  </Typography>
+                </CardContent>
+                </CardActionArea>
+                <CardActionArea style={{pointerEvents: 'none'}}>
+                <CardContent>
+                  <Typography variant="h1">
+                      {emoji.character.toString()}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+              <CardActions style={{marginTop: 0}}>
+                <Button size="small" color="primary" onClick={() => addToFavourites(emoji)}>
+                  Share
+                </Button>
+              </CardActions>
             </Card>
           )}
         </div>
@@ -80,11 +107,19 @@ function App() {
     </div>
   );
 
-  function search(){
+  function capitalizeFirst(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+  function addToFavourites(emoji) {
+    setFavourites((prev) => [...prev, emoji]);
+    console.log(emoji)
+  }
+
+  function search() {
     if (emojiName !== undefined && emojiName !== "") {
       (axios.get(THE_URL + "?search=" + getInput() + "&" + KEY).then((res) => {
         setEmojiInfo(res.data);
-        console.log(res.data);
       })
       .catch(() => {
         setEmojiInfo(undefined);
@@ -99,5 +134,3 @@ function App() {
     return temp
   }
 }
-
-export default App;
