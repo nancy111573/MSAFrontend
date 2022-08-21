@@ -24,13 +24,9 @@ export default function App() {
       <h1>
         My Favourite Emojis
       </h1>
-      {favourites === undefined || favourites === null ? (
+      {favourites.length === 0 ? (
         <div>
-          {favourites === undefined ? (
-            <p>Try type in a key word</p>
-          ) : (
-            <p>Emoji not found</p>
-          )}
+          <p>No emoji in saved yet</p>
         </div>
       ) : (
         <div style={{alignItesm: 'center'}}>
@@ -113,7 +109,7 @@ export default function App() {
 
   function addToFavourites(emoji) {
     setFavourites((prev) => [...prev, emoji]);
-    console.log(emoji)
+    console.log(favourites)
   }
 
   function search() {
