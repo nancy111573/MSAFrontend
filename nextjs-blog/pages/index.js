@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Favourites from './Favourites';
+import Favourites from '../components/Favourites';
 import React from 'react';
 import axios from "axios";
 
