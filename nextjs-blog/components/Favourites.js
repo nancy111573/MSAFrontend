@@ -20,10 +20,10 @@ export default function Favourites(props) {
           > 
             <CardContent>
               <Typography variant="h1">
-                  {emoji.character.toString()}
+                  {emoji.character}
               </Typography>
               <Typography variant="h5">
-                {emoji.unicodeName.toString()}
+                {emoji.name}
               </Typography>
             </CardContent>
           </Card>

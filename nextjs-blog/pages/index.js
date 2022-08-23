@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Favourites from '../components/Favourites';
 import React from 'react';
-import axios from "axios";
+import BooksPage from "../components/BooksPage";
 
 import { Card, CardContent, CardActionArea, CardActions, Typography, Button, TextField } from '@mui/material';
 import { useState } from 'react';
@@ -24,6 +24,10 @@ export default function App() {
       <h1>
         My Favourite Emojis
       </h1>
+      {/* <BooksPage /> */}
+      <Button onClick={refreshFavourite}>
+        Refresh
+      </Button>
       {favourites.length === 0 ? (
         <div>
           <p>No emoji in saved yet</p>
@@ -74,26 +78,24 @@ export default function App() {
               <CardActionArea style={{pointerEvents: 'none'}}>
                 <CardContent sx={{ flex: '1 0 auto' }}>
                   <Typography variant="h5">
-                    {capitalizeFirst(emoji.unicodeName.toString())}
+                    {capitalizeFirst(emoji.name)}
                   </Typography>
                   <br />
                   <Typography variant="subtitle1" color="text.secondary">
-                    Category: {emoji.group.toString()} 
-                    <br />
-                    Sub-category: {emoji.subGroup.toString()}
+                    Unicode: U+{emoji.unicode} 
                   </Typography>
                 </CardContent>
                 </CardActionArea>
                 <CardActionArea style={{pointerEvents: 'none'}}>
                 <CardContent>
                   <Typography variant="h1">
-                      {emoji.character.toString()}
+                      {emoji.character}
                   </Typography>
                 </CardContent>
               </CardActionArea>
               <CardActions style={{marginTop: 0}}>
                 <Button size="small" color="primary" onClick={() => addToFavourites(emoji)}>
-                  Share
+                  Add to Favourites
                 </Button>
               </CardActions>
             </Card>
@@ -108,20 +110,45 @@ export default function App() {
   };
 
   function addToFavourites(emoji) {
-    setFavourites((prev) => [...prev, emoji]);
-    console.log(favourites)
+    submitEmoji(emoji.name, emoji.unicode, emoji.character);
+    // setFavourites((prev) => [...prev, emoji]);
+  }
+
+  async function refreshFavourite() {
+    const response = await fetch('/api/favouriteAPI')
+    const data = await response.json()
+    console.log(data)
+    setFavourites(data);
   }
 
   function search() {
-    if (emojiName !== undefined && emojiName !== "") {
-      (axios.get(THE_URL + "?search=" + getInput() + "&" + KEY).then((res) => {
-        setEmojiInfo(res.data);
-      })
-      .catch(() => {
-        setEmojiInfo(undefined);
-      }))
-    } else {setEmojiInfo(undefined);}
+    getEmoji(getInput());
   }
+
+  async function getEmoji(searchfor) {
+    const response = await fetch('/api/databaseAPI')
+    const data = await response.json()
+    console.log(data)
+    const result = data.filter(emoji => emoji.name.includes(searchfor));
+    setEmojiInfo(result)
+  }
+
+  async function submitEmoji(name, unicode, character) {
+    const response = await fetch('/api/favouriteAPI', {
+      method: 'POST',
+      body: JSON.stringify({
+        name,
+        unicode,
+        character
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    const data = await response.json()
+    console.log(data)
+  }
+
   // reformat input for searching
   function getInput() {
     let temp = emojiName.toLowerCase();
