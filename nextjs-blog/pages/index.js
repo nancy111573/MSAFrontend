@@ -24,7 +24,6 @@ export default function App() {
       <h1>
         My Favourite Emojis
       </h1>
-      {/* <BooksPage /> */}
       <Button onClick={refreshFavourite}>
         Refresh
       </Button>

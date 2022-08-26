@@ -5,7 +5,7 @@ export default function handler(req, res) {
         emojiName
     } = req.query
     if (req.method === 'GET') {
-        const book = favouriteEmojis.find(book => book.name === emojiName.toString())
+        const book = favouriteEmojis.find(book => book.name === emojiName)
         res.set({
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
@@ -14,17 +14,15 @@ export default function handler(req, res) {
             .json(book)
     } else if (req.method === 'DELETE') {
         const deletedbook = favouriteEmojis.find(
-            book => book.name === emojiName.toString()
+            book => book.name === emojiName
         )
-        const index = favouriteEmojis.findIndex(
-            book => book.name === emojiName.toString()
-        )
-        favouriteEmojis.splice(index, 1)
-        res.set({
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-        });
+        if (deletedbook !== null) {
+            const index = favouriteEmojis.findIndex(
+                book => book.name === emojiName
+            )
+            favouriteEmojis.splice(index, 1)
+        }
         res.status(200)
-            .json(deletedbook)
+        .json(deletedbook);
     }
 }
