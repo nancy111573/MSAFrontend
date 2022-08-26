@@ -24,18 +24,7 @@ export default function App() {
       <h1>
         My Favourite Emojis
       </h1>
-      <Button onClick={refreshFavourite}>
-        Refresh
-      </Button>
-      {favourites.length === 0 ? (
-        <div>
-          <p>No emoji in saved yet</p>
-        </div>
-      ) : (
-        <div style={{alignItesm: 'center'}}>
-          <Favourites favourites={favourites}/>
-        </div>
-      )}
+      <Favourites/>
 
       {/* search bar */}
       <h1>
