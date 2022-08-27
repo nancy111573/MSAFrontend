@@ -1,16 +1,27 @@
 import Head from 'next/head'
 import Favourites from '../components/Favourites';
+import { styled } from '@mui/material/styles';
 import React from 'react';
-import BooksPage from "../components/BooksPage";
-
-import { Card, CardContent, CardActionArea, CardActions, Typography, Button, TextField } from '@mui/material';
+import { Card, Grid, CardContent, CardActionArea, CardActions, Typography, Button, TextField } from '@mui/material';
 import { useState } from 'react';
+
+const media = {
+  desktop: `@media(min-width: 1000px)`
+}
+
+const Root = styled('div')(({ theme }) => ({ 
+  textAlign: "center",
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: 50,
+  [theme.breakpoints.up('sm')]: {
+    padding: 0
+  }
+}));
 
 export default function App() {
   const [emojiName, setEmojiName] = useState("");
   const [emojiInfo, setEmojiInfo] = useState(undefined);
-  const THE_URL = "https://emoji-api.com/emojis";
-  const KEY = "access_key=60b62bd7e987589ab31bcb2fd6aec6f5efb45204";
   const [favourites, setFavourites] = useState([]);
 
   return (
@@ -52,19 +63,26 @@ export default function App() {
         </div>
       ) : (
         <div id="emoji-result">
+          <Grid
+            container
+            spacing={0}
+            direction="row"
+            justifyContent="center"
+          >
           {emojiInfo.map((emoji) =>
             <Card
+              className = 'card'
               sx={{ 
-                width: 600, 
-                display: 'flex', 
+                width: "100%", 
                 flexDirection: 'row', 
-                padding: 3, 
+                padding: 0, 
                 margin: 5, 
-                backgroundColor: 'mintcream' 
+                backgroundColor: 'lightcyan' 
               }}
             > 
+            <Root>
               <CardActionArea style={{pointerEvents: 'none'}}>
-                <CardContent sx={{ flex: '1 0 auto' }}>
+                <CardContent>
                   <Typography variant="h5">
                     {capitalizeFirst(emoji.name)}
                   </Typography>
@@ -81,13 +99,15 @@ export default function App() {
                   </Typography>
                 </CardContent>
               </CardActionArea>
-              <CardActions style={{marginTop: 0}}>
+              <CardActions>
                 <Button size="small" color="primary" onClick={() => addToFavourites(emoji)}>
-                  Add to Favourites
+                  + Favourites
                 </Button>
               </CardActions>
+              </Root>
             </Card>
           )}
+          </Grid>
         </div>
       )}
     </div>
@@ -100,13 +120,6 @@ export default function App() {
   function addToFavourites(emoji) {
     submitEmoji(emoji.name, emoji.unicode, emoji.character);
     // setFavourites((prev) => [...prev, emoji]);
-  }
-
-  async function refreshFavourite() {
-    const response = await fetch('/api/favouriteAPI')
-    const data = await response.json()
-    console.log(data)
-    setFavourites(data);
   }
 
   function search() {

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
+import { styled } from '@mui/material/styles';
 import { Card, Grow, CardContent, Typography, Button, Grid, TextField } from '@mui/material';
 
 const deleteBook = async emojiName => {
@@ -11,6 +10,22 @@ const deleteBook = async emojiName => {
   const data = await response.text()
   console.log(data)
 }
+
+function capitalizeFirst(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+const Root = styled('div')(({ theme }) => ({
+  maxWidth: 155, 
+  textAlign: "center",
+  justifyContent: 'center',
+  alignItems: 'center',
+  margin: 7,
+  [theme.breakpoints.up('sm')]: {
+    margin: 20,
+    minWidth:190, 
+  },
+}));
 
 export default function Favourites() {
     const [checked, setChecked] = React.useState(true);
@@ -24,6 +39,7 @@ export default function Favourites() {
     }
 
     return (
+      
       <div>
         <Button onClick={refreshFavourite} style={{alignself:"flex-end"}}>
           Refresh
@@ -36,7 +52,7 @@ export default function Favourites() {
         <div style={{alignItesm: 'center'}}>
         <Grid
           container
-          spacing={2}
+          spacing={0}
           direction="row"
           justifyContent="center"
         >
@@ -45,27 +61,23 @@ export default function Favourites() {
             in={checked}
             style={{ transformOrigin: '0 0 0' }}
           >
+          <Root>
           <Card
-              sx={{ 
-                maxWidth: 200, 
-                padding: 3, 
-                margin: 5, 
-                backgroundColor: 'mintcream',
-                textAlign: "center"
-              }}
+              sx = {{  backgroundColor: 'lightcyan' }}
             > 
               <CardContent>
                 <Typography variant="h1">
                     {emoji.character}
                 </Typography>
-                <Typography variant="h5">
-                  {emoji.name}
+                <Typography variant="h6">
+                  {capitalizeFirst(emoji.name)}
                 </Typography>
                 <Button size="small" color="primary" onClick={() => deleteBook(emoji.name)}>
                   Delete
                 </Button>
               </CardContent>
             </Card>
+            </Root>
             </Grow>
           )}
         </Grid>
