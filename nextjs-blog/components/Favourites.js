@@ -1,15 +1,9 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { styled } from '@mui/material/styles';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { Card, Grow, CardContent, Typography, Button, Grid, TextField } from '@mui/material';
-
-const deleteBook = async emojiName => {
-  const response = await fetch(`/api/favouriteAPI/${emojiName}`, {
-    method: 'DELETE'
-  })
-  const data = await response.text()
-  console.log(data)
-}
 
 function capitalizeFirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -27,10 +21,27 @@ const Root = styled('div')(({ theme }) => ({
   },
 }));
 
-export default function Favourites() {
+export default function Favourites(props) {
     const [checked, setChecked] = React.useState(true);
-    const [favourites, setFavourites] = useState([]);
+    const [favourites, setFavourites] = useState(props.favourites);
+    const [updated, setUpdated] = useState(false);
 
+    React.useEffect(() => {
+        setFavourites(props.favourites);
+    }, [props.favourites])
+
+    const handleChange = () => {
+      setChecked((prev) => !prev);
+    };
+    const deleteBook = async emojiName => {
+      const response = await fetch(`/api/favouriteAPI/${emojiName}`, {
+        method: 'DELETE'
+      })
+      const data = await response.text()
+      console.log(data)
+      refreshFavourite();
+      setUpdated(true);
+    }
     async function refreshFavourite() {
       const response = await fetch('/api/favouriteAPI')
       const data = await response.json()
@@ -41,13 +52,33 @@ export default function Favourites() {
     return (
       
       <div>
-        <Button onClick={refreshFavourite} style={{alignself:"flex-end"}}>
+        <FormControlLabel
+          control={<Switch checked={checked} onChange={handleChange} />}
+          label="Show"
+        />
+        {/* <Button onClick={refreshFavourite} style={{alignself:"flex-end"}}>
           Refresh
-        </Button>
+        </Button> */}
       {favourites.length === 0 ? (
-        <div>
-          <p>Nothing in your favourites yet, start by searching for one below.</p>
-        </div>
+        <Grow
+          in={checked}
+          style={{ transformOrigin: '0 0 0' }}
+        >
+        <Root>
+        <Card
+            sx = {{  backgroundColor: 'lightcyan' }}
+          > 
+            <CardContent>
+              <Typography variant="h1">
+                ❓
+              </Typography>
+              <Typography variant="p">
+                Search for something to add here
+              </Typography>
+            </CardContent>
+          </Card>
+          </Root>
+          </Grow>
       ) : (
         <div style={{alignItesm: 'center'}}>
         <Grid

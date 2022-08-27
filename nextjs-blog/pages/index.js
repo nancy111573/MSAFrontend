@@ -35,7 +35,7 @@ export default function App() {
       <h1>
         My Favourite Emojis
       </h1>
-      <Favourites/>
+      <Favourites favourites={favourites}/>
 
       {/* search bar */}
       <h1>
@@ -117,8 +117,16 @@ export default function App() {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
+  async function refreshFavourite() {
+    const response = await fetch('/api/favouriteAPI')
+    const data = await response.json()
+    console.log(data)
+    setFavourites(data);
+  }
+
   function addToFavourites(emoji) {
     submitEmoji(emoji.name, emoji.unicode, emoji.character);
+    refreshFavourite();
     // setFavourites((prev) => [...prev, emoji]);
   }
 
@@ -133,6 +141,7 @@ export default function App() {
     const result = data.filter(emoji => emoji.name.includes(searchfor));
     setEmojiInfo(result)
   }
+
 
   async function submitEmoji(name, unicode, character) {
     const response = await fetch('/api/favouriteAPI', {
