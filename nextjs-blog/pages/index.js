@@ -15,7 +15,7 @@ const Root = styled('div')(({ theme }) => ({
   alignItems: 'center',
   padding: 50,
   [theme.breakpoints.up('sm')]: {
-    padding: 0
+    width: "100%"
   }
 }));
 
@@ -135,11 +135,13 @@ export default function App() {
   }
 
   async function getEmoji(searchfor) {
-    const response = await fetch('/api/databaseAPI')
-    const data = await response.json()
-    console.log(data)
-    const result = data.filter(emoji => emoji.name.includes(searchfor));
-    setEmojiInfo(result)
+    if (searchfor !== "") {
+      const response = await fetch('/api/databaseAPI')
+      const data = await response.json()
+      console.log(data)
+      const result = data.filter(emoji => emoji.name.includes(searchfor));
+      setEmojiInfo(result)
+    }
   }
 
 
