@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { Card, Grow, CardContent, Typography, Button, Grid, TextField } from '@mui/material';
+import { Card, Slide, Grow, CardContent, Typography, Button, Grid, TextField } from '@mui/material';
 
 function capitalizeFirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -24,6 +24,19 @@ export default function Favourites(props) {
     const [checked, setChecked] = React.useState(true);
     const [favourites, setFavourites] = useState(props.favourites);
     const [updated, setUpdated] = useState(false);
+    const [width, setWidth] = useState(0);
+
+    function handleWindowSizeChange() {
+      setWidth(window.innerWidth);
+    }
+    React.useEffect(() => {
+    handleWindowSizeChange()
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+        window.removeEventListener('resize', handleWindowSizeChange);
+    }
+    }, []);
+    const isMobile = width <= 600;
 
     React.useEffect(() => {
         setFavourites(props.favourites);
@@ -54,15 +67,16 @@ export default function Favourites(props) {
         <h1>
           My Favourite Emojis
         </h1>
-        <FormControlLabel
-          control={<Switch checked={checked} onChange={handleChange} />}
-          label="Show"
-        />
+        {isMobile === true ? (
+          <FormControlLabel
+            control={<Switch checked={checked} onChange={handleChange} />}
+            label="Show"
+          />
+        ) : (
+          null
+        )}
       {favourites.length === 0 ? (
-        <Grow
-          in={checked}
-          style={{ transformOrigin: '0 0 0' }}
-        >
+        <Slide direction="up" in={checked} mountOnEnter unmountOnExit>
         <Root>
         <Card
             sx = {{  backgroundColor: 'lightcyan' }}
@@ -77,7 +91,7 @@ export default function Favourites(props) {
             </CardContent>
           </Card>
           </Root>
-          </Grow>
+          </Slide>
       ) : (
         <div style={{alignItesm: 'center'}}>
         <Grid
@@ -87,10 +101,7 @@ export default function Favourites(props) {
           justifyContent="center"
         >
           {favourites.map((emoji) =>
-          <Grow
-            in={checked}
-            style={{ transformOrigin: '0 0 0' }}
-          >
+          <Slide direction="up" in={checked} mountOnEnter unmountOnExit>
           <Root>
           <Card
               sx = {{  backgroundColor: 'lightcyan' }}
@@ -108,7 +119,7 @@ export default function Favourites(props) {
               </CardContent>
             </Card>
             </Root>
-            </Grow>
+            </Slide>
           )}
         </Grid>
         </div>
