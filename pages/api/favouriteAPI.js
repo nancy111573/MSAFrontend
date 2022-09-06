@@ -1,9 +1,5 @@
 import { favouriteEmojis } from "./favouriteEmojis";
 
-// export default function handler(req, res) {
-//   res.status(200).json(favouriteEmojis);
-// }
-
 export default function handler(req, res) {
   const {
     emojiName
@@ -15,13 +11,13 @@ export default function handler(req, res) {
     const name = req.body.name
     const unicode = req.body.unicode
     const character = req.body.character
-    const newBook = {
+    const newEmoji = {
       name,
       unicode,
       character
     }
-    favouriteEmojis.push(newBook)
+    favouriteEmojis.push(newEmoji)
     res.status(201)
-      .json(newBook)
+      .json(newEmoji)
   }
 }

@@ -5,17 +5,18 @@ import React from 'react';
 import { Card, Grid, CardContent, CardActionArea, CardActions, Typography, Button, TextField } from '@mui/material';
 import { useState } from 'react';
 
-const media = {
-  desktop: `@media(min-width: 1000px)`
-}
-
 const Root = styled('div')(({ theme }) => ({ 
+  width: "80%", 
+  flexDirection: 'row', 
+  margin: 15, 
+  backgroundColor: 'lightcyan',
   textAlign: "center",
   justifyContent: 'center',
   alignItems: 'center',
   padding: 50,
   [theme.breakpoints.up('sm')]: {
-    width: "100%"
+    padding: 5,
+    margin: 20,
   }
 }));
 
@@ -42,7 +43,7 @@ export default function App() {
         Add New Emojis
       </h1> 
       <TextField
-        style={{ minWidth: "60%" }}
+        style={{ minWidth: "80%" }}
         placeholder="Search an emoji"
         inputProps={{style: { textAlign: 'center', padding: 10 }}}
         onChange = {e => setEmojiName(e.target.value)}
@@ -53,7 +54,7 @@ export default function App() {
       </Button>
 
       {/* search results */}
-      {emojiInfo === undefined || emojiInfo === null ? (
+      {emojiInfo === undefined || emojiInfo.length === 0 ? (
         <div>
           {emojiInfo === undefined ? (
             <p>Try type in a key word</p>
@@ -70,16 +71,7 @@ export default function App() {
             justifyContent="center"
           >
           {emojiInfo.map((emoji) =>
-            <Card
-              className = 'card'
-              sx={{ 
-                width: "100%", 
-                flexDirection: 'row', 
-                padding: 0, 
-                margin: 5, 
-                backgroundColor: 'lightcyan' 
-              }}
-            > 
+    
             <Root>
               <CardActionArea style={{pointerEvents: 'none'}}>
                 <CardContent>
@@ -105,7 +97,7 @@ export default function App() {
                 </Button>
               </CardActions>
               </Root>
-            </Card>
+      
           )}
           </Grid>
         </div>
@@ -138,8 +130,8 @@ export default function App() {
     if (searchfor !== "") {
       const response = await fetch('/api/databaseAPI')
       const data = await response.json()
-      console.log(data)
       const result = data.filter(emoji => emoji.name.includes(searchfor));
+      console.log(result)
       setEmojiInfo(result)
     }
   }

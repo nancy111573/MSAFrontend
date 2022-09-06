@@ -2,27 +2,27 @@ import { favouriteEmojis } from "../favouriteEmojis";
 
 export default function handler(req, res) {
     const {
-        emojiName
+        emojiCode
     } = req.query
     if (req.method === 'GET') {
-        const book = favouriteEmojis.find(book => book.name === emojiName)
+        const emoji = favouriteEmojis.find(emoji => emoji.unicode === emojiCode)
         res.set({
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
         });
         res.status(200)
-            .json(book)
+            .json(emoji)
     } else if (req.method === 'DELETE') {
-        const deletedbook = favouriteEmojis.find(
-            book => book.name === emojiName
+        const deletedemoji = favouriteEmojis.find(
+            emoji => emoji.unicode === emojiCode
         )
-        if (deletedbook !== null) {
+        if (deletedemoji !== null) {
             const index = favouriteEmojis.findIndex(
-                book => book.name === emojiName
+                emoji => emoji.unicode === emojiCode
             )
             favouriteEmojis.splice(index, 1)
         }
         res.status(200)
-        .json(deletedbook);
+        .json(deletedemoji);
     }
 }

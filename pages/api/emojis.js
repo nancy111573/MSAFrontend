@@ -1,3 +1,4 @@
+// store all emojis that can be searched
 // derived from https://unicode.org/Public/emoji/14.0/emoji-sequences.txt
 export const emojis = [
     {

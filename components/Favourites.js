@@ -10,14 +10,13 @@ function capitalizeFirst(str) {
 };
 
 const Root = styled('div')(({ theme }) => ({
-  maxWidth: 155, 
+  minWidth:190, 
   textAlign: "center",
   justifyContent: 'center',
   alignItems: 'center',
   margin: 7,
-  [theme.breakpoints.up('sm')]: {
+  [theme.breakpoints.up('md')]: {
     margin: 20,
-    minWidth:190, 
   },
 }));
 
@@ -33,8 +32,8 @@ export default function Favourites(props) {
     const handleChange = () => {
       setChecked((prev) => !prev);
     };
-    const deleteBook = async emojiName => {
-      const response = await fetch(`/api/favouriteAPI/${emojiName}`, {
+    const deleteEmoji = async emojiCode => {
+      const response = await fetch(`/api/favouriteAPI/${emojiCode}`, {
         method: 'DELETE'
       })
       const data = await response.text()
@@ -103,7 +102,7 @@ export default function Favourites(props) {
                 <Typography variant="h6">
                   {capitalizeFirst(emoji.name)}
                 </Typography>
-                <Button size="small" color="primary" onClick={() => deleteBook(emoji.name)}>
+                <Button size="small" color="primary" onClick={() => deleteEmoji(emoji.unicode)}>
                   Delete
                 </Button>
               </CardContent>
