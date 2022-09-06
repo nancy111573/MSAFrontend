@@ -10,7 +10,7 @@ function capitalizeFirst(str) {
 };
 
 const Root = styled('div')(({ theme }) => ({
-  minWidth:190, 
+  minWidth:150, 
   textAlign: "center",
   justifyContent: 'center',
   alignItems: 'center',
@@ -48,16 +48,16 @@ export default function Favourites(props) {
       setFavourites(data);
     }
 
-    return (
-      
+    return (      
       <div>
+        {/* emojis list */}
+        <h1>
+          My Favourite Emojis
+        </h1>
         <FormControlLabel
           control={<Switch checked={checked} onChange={handleChange} />}
           label="Show"
         />
-        {/* <Button onClick={refreshFavourite} style={{alignself:"flex-end"}}>
-          Refresh
-        </Button> */}
       {favourites.length === 0 ? (
         <Grow
           in={checked}
